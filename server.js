@@ -6,6 +6,8 @@ connectDB()
 
 app.use(express.json())
 
+app.use('/api/Auth', require('./Auth/Route'))
+
 const server = app.listen(process.env.PORT||PORT, () => console.log(`Server is running on port: ${process.env.PORT} `))
 
 process.on('unhandledRejection', err => {
