@@ -32,7 +32,6 @@ exports.register = async (req, res, next) => {
             role: user.role,
           });
         })
-        .then(userTokenCreation())
         .catch((error) =>
           res.status(400).json({
             message: "User not successfully created",
@@ -75,6 +74,7 @@ exports.login = async (req, res, next) => {
                 res.status(201).json({
                   message: "User successfully Logged in",
                   user: user._id,
+                  role: user.role
                 });
               } else {
                 res.status(400).json({ message: "Login not succesful" });
@@ -150,4 +150,20 @@ exports.deleteUser = async (req, res, next) => {
                 error: error.message
             })
         })
+}
+
+exports.getUsers = async (req, res, next) => {
+  await User.find({})
+    .then(users => {
+      const userFunction = users.map(user => {
+        const container = {}
+        container.username = user.username
+        container.role = user.role
+        container.id = user._id
+        return container
+      })
+      res.status(200).json({user: userFunction})
+    })
+    .catch(err =>
+      res.status(401).json({message: "not successfull", error: err.message}))
 }
